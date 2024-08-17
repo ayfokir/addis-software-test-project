@@ -8,7 +8,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use( sanitize.middleware );
+app.use(sanitize.middleware);
 
 app.use(routes); // Use the routes
 
