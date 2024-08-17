@@ -1,0 +1,14 @@
+# Node.js modules
+node_modules/
+
+# Environment variable files
+.env
+.env.*
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+
+
