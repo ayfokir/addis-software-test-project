@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import React from 'react';
 import { css } from '@emotion/react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
@@ -11,12 +12,10 @@ const containerStyles = css`
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  padding-bottom: 40px;
-  padding-left: 60px;
-
-  flex: 1; /* Ensures it takes the full height of the parent container */
-  justify-content: center; /* Center the content vertically */
-  
+  padding: 20px 40px; /* Adjust padding to match the SongsPerAlbum component */
+  width: 60%;
+  height: 565px; /* Set a specific height to match SongsPerAlbum component */
+  box-sizing: border-box;
 `;
 
 const headerStyles = css`
@@ -24,26 +23,25 @@ const headerStyles = css`
   font-size: 24px;
   font-weight: 500;
   color: #333;
-  margin-left: 20px; /* Add left margin */
-  margin-bottom: 0
+  margin-bottom: 20px; /* Match margin with SongsPerAlbum component */
+  margin-top: 0
 `;
 
 const hrStyles = css`
-  margin-left: 14px;
   border: none;
   border-top: 1px solid #e5e7eb;
+  margin: 0;
 `;
 
 const chartContainerStyles = css`
   display: flex;
   justify-content: center;
-  overflow-x: auto;
+  flex: 1; /* Ensures it takes available space */
 `;
 
 const chartWrapperStyles = css`
-  flex: 1; /* Ensures it takes the full height of the parent container */
-  width: 100%; /* Ensures it takes the full width of the parent container */
-
+  width: 100%; /* Ensures it takes full width */
+  height: 100%; /* Ensures it takes full height */
 `;
 
 export const BarChart: React.FC = () => {
@@ -74,7 +72,7 @@ export const BarChart: React.FC = () => {
       <hr css={hrStyles} />
       <div css={chartContainerStyles}>
         <div css={chartWrapperStyles}>
-          <Bar data={data} height={176} />
+          <Bar data={data} options={{ maintainAspectRatio: false }} />
         </div>
       </div>
     </div>

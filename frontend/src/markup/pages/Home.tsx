@@ -2,8 +2,7 @@
 import { css } from "@emotion/react";
 import React, { useState } from "react";
 // import Table from "../component/Table/Table";
-import NewTable from "../component/NewTable/Table";
-import Table from "../component/Table/Table";
+import NewTable from "../component/Table/Table";
 import getSongs from "../../services/get-songs.service";
 import { useEffect } from "react";
 import { Song } from "../../utils/Types";
@@ -13,12 +12,11 @@ import { RootState } from "../redux/store/Store";
 import { MRT_ColumnDef } from "material-react-table";
 import { setSelectedSong } from "../redux/slices/selectedSongSlice";
 import styled from "@emotion/styled";
+import EditSong from "../component/Main/EditSong";
 const homePageStyles  =  css `
     background-color:rgb(240,242,255);
     padding: 12px 20px;
 `
-
-
 const Button = styled.button`
   padding: 10px 20px; /* Increased padding for larger buttons */
   font-size: 16px; /* Increased font size */
@@ -40,7 +38,7 @@ const EditButton = styled(Button)`
   background-color: #28a745; /* Green color for edit button */
 `;
 
-const StyledTd = styled.td`
+const Styled = styled.td`
 
   padding: 8px;
   text-align: left;
@@ -51,35 +49,66 @@ const ButtonContainer = styled.div`
   justify-content: flex-start;
 `;
 
+
+
+const PopupBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+   z-index: 1000; // Add this line
+`;
+
+const PopupContent = styled.div`
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+    z-index: 1001; // Add this line
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  font-size: 14px;
+  background-color: #ccc;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+`;
+
 const Home: React.FC = () => {
   const dispatch = useDispatch(); // Get dispatch function from Redux
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
 
-  const handleCreateSongsClick = () => {
-    setIsPopupOpen(true);
-  };
 
   const handlePopupBackgroundClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     if (e.target === e.currentTarget) {
-      setIsPopupOpen(false);
       setIsEditPopupOpen(false);
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (_id: string) => {
     try {
       // console.log(`Deleting song with id ${id}`);
-      // dispatch(deleteSongStart(id));
+      dispatch(deleteSongStart(_id));
     } catch (error) {
       console.log("Error deleting song", error);
     }
   };
-  const handleEdit = (row: any) => {
+  const handleEdit = (row: Song) => {
     console.log(`Editing song with id ${row._id}`);
     setIsEditPopupOpen(true);
+    console.log("see row:", row)
     dispatch(setSelectedSong(row)); // Dispatch selectSong action with the selected song
   };
 
@@ -114,14 +143,14 @@ const Home: React.FC = () => {
     header: 'Action',
     size: 100,
     Cell: ({ row }) => (
-      <StyledTd>
+      <Styled>
       <ButtonContainer>
-        <EditButton onClick={() => handleEdit(row)}>Edit</EditButton>
-        <DeleteButton onClick={() => handleDelete()}>
+        <EditButton onClick={() => handleEdit(row.original)}>Edit</EditButton>
+        <DeleteButton onClick={() => handleDelete(row.original._id)}>
           Delete
         </DeleteButton>
       </ButtonContainer>
-    </StyledTd>
+    </Styled>
     ),
   }
   ];
@@ -143,6 +172,17 @@ const Home: React.FC = () => {
       {error && <p>Error: {error}</p>} {/* Display error message */}
       {/* {!loading && !error && <Table data={songs} columns={columns} />} */}
       {!loading && !error && <NewTable data={songs} columns={columns}  />}
+
+      {isEditPopupOpen && (
+        <PopupBackground onClick={handlePopupBackgroundClick}>
+          <PopupContent>
+            <CloseButton onClick={() => setIsEditPopupOpen(false)}>
+              &#10005;
+            </CloseButton>
+            <EditSong onAddSong={() => setIsEditPopupOpen(false)} />
+          </PopupContent>
+        </PopupBackground>
+      )}
     </div>
   );
 };

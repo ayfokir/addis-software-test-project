@@ -12,6 +12,7 @@ const headerStyles = css`
   align-items: center;
   position: sticky; /* Make the header sticky */
   top: 0; /* Stick to the top of the viewport */
+    z-index: 100; // Add this line
 `;
 
 const titleStyles = css`

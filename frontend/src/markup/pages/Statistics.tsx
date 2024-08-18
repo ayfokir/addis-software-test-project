@@ -1,25 +1,78 @@
+/** @jsxImportSource @emotion/react */
 import React from 'react';
+import { css } from '@emotion/react';
 import { useSelector } from 'react-redux';
 import { FaMusic, FaUser, FaCompactDisc, FaPalette } from 'react-icons/fa';
 import styled from '@emotion/styled';
 import Card from '../component/Statistics/Card';
 import { BarChart } from '../component/Statistics/BarChart';
 import StatisticsTable1 from '../component/Statistics/StatisticsTable1';
-import StatisticsTable2 from '../component/Statistics/StatisticsTable2';
 import { RootState } from '../redux/store/Store';
+import  SongsPerAlbum from  '../component/Statistics/Pichart'
+import { MaterialReactTable, MRT_ColumnDef, useMaterialReactTable } from 'material-react-table';
 
+import { Song } from '../../utils/Types';
 const columns1 = [
   { header: "Artist", accessor: "artist" },
   { header: "Number of Albums ", accessor: "album" },
   { header: "Number of Songs", accessor: "song" },
 ];
-const columns2 = [
-  { header: " Albums", accessor: "album" },
-  { header: "Number of Songs", accessor: "song" },
-];
+
+const parent   = css`
+ background-color:rgb(240,242,255);
+ padding: 12px 20px;
+`
+const cardContainer  = css`
+background-color: white;
+`
+const mainContainerStyles = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding-top: 20px;
+  gap: 20px;
+`;
 
 const Statistics: React.FC = () => {
   const songs = useSelector((state: RootState) => state.songs.songs);
+
+
+  const columns: MRT_ColumnDef<Song>[] = [
+    {
+      accessorKey: "_id",
+      header: "No.",
+      size: 100,
+    },
+    {
+      accessorKey: "title",
+      header: "Title",
+      size: 150,
+    },
+    {
+      accessorKey: "artist",
+      header: "Artist",
+      size: 250,
+    },
+    {
+      accessorKey: "album",
+      header: "Album",
+      size: 150,
+    },
+    {
+      accessorKey: "genre",
+      header: "Genre",
+      size: 150,
+    },
+  ];
+
+  
+
+
+
+
+
+
 
   // Prepare data for StatisticsTable1
   const preparedData = songs.reduce<{ [key: string]: { artist: string; album: number; song: number } }>((acc, song) => {
@@ -41,7 +94,7 @@ const Statistics: React.FC = () => {
     return acc;
   }, {});
     
-  const preparedDataForTable2Array = Object.values(preparedDataForTable2);
+  // const preparedDataForTable2Array = Object.values(preparedDataForTable2);
 
   // Convert the object to an array of objects
   const dataForTable = Object.values(preparedData);
@@ -49,24 +102,29 @@ const Statistics: React.FC = () => {
   // Calculate total albums
   const totalAlbums = Object.values(preparedData).reduce((acc, artist) => acc + artist.album, 0);
 
+// const table = useMaterialReactTable({
+//     columns,
+//     dataForTable,
+    
+// });
+
+
+
   return (
-    <Container>
+    <Container css={parent}>
       <Title>Statistics</Title>
-      <CardContainer>
+      <CardContainer css={cardContainer}>
         <Card title="Total Songs" value={songs.length.toString()} icon={<FaMusic />} />
         <Card title="Total Artists" value={Object.keys(preparedData).length.toString()} icon={<FaUser />} />
-        <Card title="Total Albums" value={totalAlbums.toString()} icon={<FaCompactDisc />} />
+        <Card title="Total Albums" value={totalAlbums?.toString()} icon={<FaCompactDisc />} />
         <Card title="Total Genres" value={new Set(songs.map(song => song.genre)).size.toString()} icon={<FaPalette />} />
       </CardContainer>
-      <FlexContainer>
-        <ChartWrapper>
-          <BarChart />
-        </ChartWrapper>
-        <TableWrapper>
-        <StatisticsTable2 data={preparedDataForTable2Array} columns={columns2} />
-        </TableWrapper>
-      </FlexContainer>
-        <StatisticsTable1 data={dataForTable} columns={columns1} />
+      <div css={mainContainerStyles}>
+      <BarChart />
+      <SongsPerAlbum />
+    </div>
+        {/* <StatisticsTable1 data={dataForTable} columns={columns1} /> */}
+        {/* <MaterialReactTable table={table} /> */}
     </Container>
   );
 };

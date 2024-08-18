@@ -81,13 +81,14 @@ const songSlice = createSlice({
           state.loading = true;
           state.error = null;
         },
-        deleteSongSuccess(state, action: PayloadAction<string>) {
+        deleteSongSuccess(state, action: PayloadAction<ApiResponse>) {
             state.loading = false;
-            state.songs = state.songs.filter(song => song._id !== action.payload);
+            state.songs = state.songs.filter(song => song._id !== action.payload.songs[0]._id);
+            state.message = action.payload.message
         },
-        deleteSongFailure(state, action: PayloadAction<string>) {
+        deleteSongFailure(state, action: PayloadAction<ErrorResponse>) {
             state.loading = false;
-            state.error = action.payload;
+            state.error = action.payload.error;
         },
     },
 });
