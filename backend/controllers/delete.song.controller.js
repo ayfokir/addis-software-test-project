@@ -18,8 +18,7 @@ async function Delete(req, res, next) {
             });
         }
     } catch (error) {
-        console.error('Error in Delete controller:', error);
-        res.status(500).json({ error: "Something went wrong!", status: false });
+        res.status(500).json({error: process.env.NODE_ENV === 'development' ? error.message : "Unexpected error occurred", success: false });
     }
 }
 

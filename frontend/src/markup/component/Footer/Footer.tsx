@@ -9,7 +9,7 @@ const footerStyles = css`
   text-align: center;
   bottom: 0;
   width: 100%;
-  margin-top: 20px; /* Add margin top */
+  margin-top: auto; /* Pushes footer to the bottom of the flex container */
 `;
 
 const Footer: React.FC = () => (

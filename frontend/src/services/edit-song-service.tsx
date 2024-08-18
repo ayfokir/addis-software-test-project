@@ -1,5 +1,5 @@
 //dotenv ayasfelgm, create-reat-app, npm start or npm run build  sinaderge  dotenv abro install yhonal
-import formDataType from "../utils/FormType";
+import {Song} from "../utils/Types";
 const api_url = process.env.REACT_APP_API_URL;
 //A function to send the login request to the server
 // interface formDataType {
@@ -8,12 +8,12 @@ const api_url = process.env.REACT_APP_API_URL;
 //     genre : string
 //     artist : string
 // }
-const Edit = async (formData: formDataType) => {
-    console.log(api_url)
+const Edit = async (formData: Song) => {
+  console.log(api_url);
   const requestOptions = {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData)
+    body: JSON.stringify(formData),
   };
   console.log("About to send request");
   console.log(requestOptions.body);
@@ -22,4 +22,4 @@ const Edit = async (formData: formDataType) => {
 };
 
 // Export the functions
-export default Edit
+export default Edit;

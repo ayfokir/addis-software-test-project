@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
+import { ApiResponse } from '../../../utils/Types';
+import { ErrorResponse } from '../../../utils/Types';
 // Define the Song interface
 export interface Song {
-    _id: string | undefined;
+    _id: string ;
     title: string;
     artist: string;
     album: string;
@@ -14,12 +15,14 @@ interface SongState {
     songs: Song[];
     loading: boolean;
     error: string | null; 
+    message:  string
 }
 
 const initialState: SongState = {
     songs: [],
     loading: false,
     error: null,
+    message:  ""
 };
 
 const songSlice = createSlice({
@@ -29,14 +32,17 @@ const songSlice = createSlice({
         fetchSongsStart(state) {
             state.loading = true;
             state.error = null;
+            state.message = ""
         },
-        fetchSongsSuccess(state, action: PayloadAction<Song[]>) {
+        fetchSongsSuccess(state, action: PayloadAction<ApiResponse>) {
             state.loading = false;
-            state.songs = action.payload;
+            // console.log("see action inside fetchSongSuccess slice:", action)
+            state.songs = action.payload.songs;
+            state.message =  action.payload.message;
         },
-        fetchSongsFailure(state, action: PayloadAction<string>) {
+        fetchSongsFailure(state, action: PayloadAction<ErrorResponse>) {
             state.loading = false;
-            state.error = action.payload;
+            state.error = action.payload.error;
         },
 
 

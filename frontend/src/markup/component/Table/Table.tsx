@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import AddSongForm from "../Main/AddSong";
-import formDataType from "../../../utils/FormType";
+import {Song} from "../../../utils/Types";
 import EditSong from "../Main/EditSong";
 import Delete from "../../../services/delete.song.service";
-import {  setSelectedSong } from "../../redux/slices/selectedSongSlice";
-import {  deleteSongStart, } from "../../redux/slices/Slice";
+import { setSelectedSong } from "../../redux/slices/selectedSongSlice";
+import { deleteSongStart } from "../../redux/slices/Slice";
 import { useDispatch } from "react-redux";
 
 type TableProps = {
@@ -201,9 +201,7 @@ const Table: React.FC<TableProps> = ({ data, columns }) => {
             <CloseButton onClick={() => setIsEditPopupOpen(false)}>
               &#10005;
             </CloseButton>
-            <EditSong
-              onAddSong={() => setIsEditPopupOpen(false)}
-            />
+            <EditSong onAddSong={() => setIsEditPopupOpen(false)} />
           </PopupContent>
         </PopupBackground>
       )}
