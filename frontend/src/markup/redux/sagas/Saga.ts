@@ -68,10 +68,20 @@ function* deleteSong(action: PayloadAction<string>): Generator {
     console.log("see action ")
     console.log(action)
     try {
-        yield call(axios.delete, `${API_URL}/api/delete/${action.payload}`);
-        yield put(deleteSongSuccess(action.payload));
+     const response : any =    yield call(axios.delete, `${API_URL}/api/delete/${action.payload}`);
+     console.log("see delete response:", response.data)
+     if (response.data.success) {
+         yield put(deleteSongSuccess(response.data));
+     }
+     else if (!response.data.success) {
+        yield put(deleteSongFailure(response.data));
+     }
+     else {
+        // Handle unexpected response format
+        yield put(deleteSongFailure({ error: "Unexpected response format", success: false }));
+    }
     } catch (error: any) {
-        yield put(deleteSongFailure(error.message));
+        yield put(deleteSongFailure({error: error.message || "Unexpected error occurred", success: false} ));
     }
 }
 

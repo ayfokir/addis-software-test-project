@@ -9,12 +9,12 @@ async function Delete(req, res, next) {
             res.status(200).json({
                 message: 'Song deleted successfully',
                 song: result.song,
-                status: true
+                success: true
             });
         } else {
             res.status(404).json({
                 error: result.error,
-                status: false
+                success: false
             });
         }
     } catch (error) {

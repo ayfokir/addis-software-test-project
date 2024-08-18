@@ -1,22 +1,21 @@
-import React, { useState } from "react";
+/** @jsxImportSource @emotion/react */
+import React, { useMemo, useRef, UIEvent, useEffect, useState } from 'react';
+import { Song } from '../../../utils/Types';
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+  type MRT_ColumnDef,
+} from 'material-react-table';
 import styled from "@emotion/styled";
-import AddSongForm from "../Main/AddSong";
-import {Song} from "../../../utils/Types";
-import EditSong from "../Main/EditSong";
-import Delete from "../../../services/delete.song.service";
-import { setSelectedSong } from "../../redux/slices/selectedSongSlice";
-import { deleteSongStart } from "../../redux/slices/Slice";
-import { useDispatch } from "react-redux";
-
-type TableProps = {
-  data: Array<{ [key: string]: any }>;
-  columns: Array<{ header: string; accessor: string }>;
-};
+import AddSongForm from '../Main/AddSong';
 
 const StyledHeadingContainer = styled.div`
   display: flex;
+  margin-bottom: 15px;
+  padding: 15px;
   justify-content: space-between;
   align-items: center;
+  background-color: white;
 `;
 
 const StyledHeading = styled.h3`
@@ -38,52 +37,6 @@ const StyledButton = styled.button`
   cursor: pointer;
 `;
 
-const TableContainer = styled.div`
-  width: 80%;
-  overflow-x: auto;
-  margin: 0 auto;
-`;
-
-const StyledTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`;
-
-const StyledTh = styled.th`
-  border: 1px solid #ddd;
-  padding: 8px;
-  background-color: #f2f2f2;
-  text-align: center;
-`;
-
-const StyledTd = styled.td`
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-`;
-
-const Button = styled.button`
-  padding: 5px 10px;
-  font-size: 14px;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-`;
-
-const DeleteButton = styled(Button)`
-  background-color: #dc3545; /* Red color for delete button */
-`;
-
-const EditButton = styled(Button)`
-  background-color: #28a745; /* Green color for edit button */
-`;
-
 const PopupBackground = styled.div`
   position: fixed;
   top: 0;
@@ -94,6 +47,7 @@ const PopupBackground = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+   z-index: 1000; // Add this line
 `;
 
 const PopupContent = styled.div`
@@ -101,6 +55,7 @@ const PopupContent = styled.div`
   padding: 20px;
   border-radius: 8px;
   position: relative;
+  z-index: 1001; // Add this line
 `;
 
 const CloseButton = styled.button`
@@ -114,77 +69,45 @@ const CloseButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
 `;
-const Table: React.FC<TableProps> = ({ data, columns }) => {
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
-  const dispatch = useDispatch(); // Get dispatch function from Redux
 
-  const handleCreateSongsClick = () => {
-    setIsPopupOpen(true);
-  };
+// Define props interface
+interface BookTableProps {
+    data: Song[];
+    columns: MRT_ColumnDef<Song>[];
+}
 
-  const handlePopupBackgroundClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    if (e.target === e.currentTarget) {
-      setIsPopupOpen(false);
-      setIsEditPopupOpen(false);
-    }
-  };
+const NewTable: React.FC<BookTableProps> = ({ data, columns }) => {
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const handleDelete = async (id: string) => {
-    try {
-      console.log(`Deleting song with id ${id}`);
-      dispatch(deleteSongStart(id));
-    } catch (error) {
-      console.log("Error deleting song", error);
-    }
-  };
-  const handleEdit = (row: any) => {
-    console.log(`Editing song with id ${row._id}`);
-    setIsEditPopupOpen(true);
-    dispatch(setSelectedSong(row)); // Dispatch selectSong action with the selected song
-  };
+    const handleCreateSongsClick = () => {
+      setIsPopupOpen(true);
+    };
+    const handlePopupBackgroundClick = ( e: React.MouseEvent<HTMLDivElement, MouseEvent> ) => {
+        if (e.target === e.currentTarget) {
+          setIsPopupOpen(false);
+          // setIsEditPopupOpen(false);
+        }
+      };
+
+  const table = useMaterialReactTable({
+    columns,
+    data,
+    
+});
+
   return (
-    <TableContainer>
-      <StyledHeadingContainer>
+    <div >
+         <StyledHeadingContainer>
         <StyledHeading>Songs Table</StyledHeading>
         <StyledButton onClick={handleCreateSongsClick}>
           Create Songs
         </StyledButton>
       </StyledHeadingContainer>
-      <StyledTable>
-        <thead>
-          <tr>
-            <StyledTh>No.</StyledTh> {/* Add No. column header */}
-            {columns.map((column) => (
-              <StyledTh key={column.accessor}>{column.header}</StyledTh>
-            ))}
-            <StyledTh>Actions</StyledTh>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              <StyledTd>{rowIndex + 1}</StyledTd>{" "}
-              {/* Display index + 1 as the "No." value */}
-              {columns.map((column) => (
-                <StyledTd key={column.accessor}>
-                  {row[column.accessor]}
-                </StyledTd>
-              ))}
-              <StyledTd>
-                <ButtonContainer>
-                  <EditButton onClick={() => handleEdit(row)}>Edit</EditButton>
-                  <DeleteButton onClick={() => handleDelete(row._id)}>
-                    Delete
-                  </DeleteButton>
-                </ButtonContainer>
-              </StyledTd>
-            </tr>
-          ))}
-        </tbody>
-      </StyledTable>
+      {/* <h3 css={h1Styles}>Songs Table</h3> */}
+      <MaterialReactTable table={table} />
+
+
+
       {isPopupOpen && (
         <PopupBackground onClick={handlePopupBackgroundClick}>
           <PopupContent>
@@ -195,18 +118,9 @@ const Table: React.FC<TableProps> = ({ data, columns }) => {
           </PopupContent>
         </PopupBackground>
       )}
-      {isEditPopupOpen && (
-        <PopupBackground onClick={handlePopupBackgroundClick}>
-          <PopupContent>
-            <CloseButton onClick={() => setIsEditPopupOpen(false)}>
-              &#10005;
-            </CloseButton>
-            <EditSong onAddSong={() => setIsEditPopupOpen(false)} />
-          </PopupContent>
-        </PopupBackground>
-      )}
-    </TableContainer>
+    
+    </div>
   );
 };
 
-export default Table;
+export default NewTable;

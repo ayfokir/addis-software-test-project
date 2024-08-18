@@ -7,14 +7,12 @@ export interface Song {
     __v?: number
 }
 export interface ApiResponse {
-    
         success: boolean;
         songs: Song[];
         message: string
     
 }
 export interface ErrorResponse {
-    
         error: string;
         success: boolean
     

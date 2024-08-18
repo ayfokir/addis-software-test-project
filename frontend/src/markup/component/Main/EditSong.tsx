@@ -81,6 +81,7 @@ const EditSong: React.FC<{onAddSong: () => void;}> = ({ onAddSong }) => {
       return;
     }
     dispatch(updateSongStart({ title, album, genre, artist, _id }));
+    onAddSong()
   };
   if (!selectedSong) {
     return <div>No song selected</div>;
