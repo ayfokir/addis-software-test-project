@@ -4,21 +4,9 @@ import axios from 'axios';
 import { AxiosResponse } from 'axios'; // Import AxiosResponse type
 import { fetchSongsStart, fetchSongsSuccess, fetchSongsFailure, addSongStart, addSongSuccess, addSongFailure, updateSongStart, updateSongSuccess, updateSongFailure, deleteSongStart,deleteSongSuccess,deleteSongFailure,
 } from '../slices/Slice';
+import { ApiResponse } from '../../../utils/Types';
+import { ErrorResponse } from '../../../utils/Types';
 
-interface Song {
-    _id: string; // Assuming _id is a string
-    title: string;
-    artist: string;
-    album: string;
-    genre: string;
-    __v: number; // Assuming __v is a number
-}
-interface ApiResponse {
-    data : {
-        success: boolean;
-        songs: Song[];
-    }
-}
 
 // Fetch Songs
 // Define API endpoints
@@ -26,13 +14,25 @@ const API_URL = process.env.REACT_APP_BASE_URL ;
 console.log("see base url:", API_URL)
 function* fetchSongs(): Generator {
     try {
-        const response = yield call(axios.get, `${API_URL}/api/get`);
-        const typedResponse = response as ApiResponse;
-        console.log("see the songs")
-        console.log(typedResponse)
-    yield put(fetchSongsSuccess(typedResponse.data.songs));
+        // Type the response as AxiosResponse<any> to handle multiple response types
+        const response:any = yield call(axios.get, `${API_URL}/api/get`);
+        // Check the type of the response
+        if (response.data.success) {
+            // Handle ApiResponse
+            const apiResponse = response.data as ApiResponse;
+            // console.log("Success response:", apiResponse);
+            yield put(fetchSongsSuccess(apiResponse));
+        } else if (!response.data.success) {
+            // Handle ErrorResponse
+            const errorResponse = response.data as ErrorResponse;
+            // console.log("Error response:", errorResponse);
+            yield put(fetchSongsFailure(errorResponse));
+        } else {
+            // Handle unexpected response format
+            yield put(fetchSongsFailure({ error: "Unexpected response format", success: false }));
+        }
     } catch (error: any) {
-        yield put(fetchSongsFailure(error.message));
+        yield put(fetchSongsFailure({ error: error.message || "Unexpected error occurred", success: false }));
     }
 }
 

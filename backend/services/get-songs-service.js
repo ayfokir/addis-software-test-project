@@ -9,7 +9,7 @@ async function getSongs() {
         return { success: true, songs };
     } catch (error) {
         console.error('Error getting songs:', error);
-        return { success: false, error: error.message };
+        return { success: false,error: process.env.NODE_ENV === 'development' ? error.message : "Unexpected error occurred" };
     }
 }
 

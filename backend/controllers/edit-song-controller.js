@@ -21,7 +21,7 @@ async function EditSong(req, res, next) {
         }
     } catch (error) {
         console.error('Error in EditSong controller:', error);
-        res.status(500).json({ error: "Something went wrong!" });
+        res.status(500).json({error: process.env.NODE_ENV === 'development' ? error.message : "Unexpected error occurred", success: false });
     }
 }
 
