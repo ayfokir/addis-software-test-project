@@ -4,7 +4,7 @@ import React from 'react';
 
 interface CardProps {
   title: string;
-  value: string;
+  value: number;
   icon: React.ReactNode; // Use React.ReactNode for any type of icon component
 }
 
