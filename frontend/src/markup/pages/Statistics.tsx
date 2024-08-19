@@ -1,30 +1,23 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react';
+import React, { useMemo } from 'react';
 import { css } from '@emotion/react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../redux/hooks';
 import { FaMusic, FaUser, FaCompactDisc, FaPalette } from 'react-icons/fa';
 import styled from '@emotion/styled';
 import Card from '../component/Statistics/Card';
-import { BarChart } from '../component/Statistics/BarChart';
-import StatisticsTable1 from '../component/Statistics/StatisticsTable1';
-import { RootState } from '../redux/store/Store';
-import  SongsPerAlbum from  '../component/Statistics/Pichart'
 import { MaterialReactTable, MRT_ColumnDef, useMaterialReactTable } from 'material-react-table';
+import BarChart from '../component/Statistics/BarChart';
+import SongsPerAlbum from '../component/Statistics/Pichart';
 
-import { Song } from '../../utils/Types';
-const columns1 = [
-  { header: "Artist", accessor: "artist" },
-  { header: "Number of Albums ", accessor: "album" },
-  { header: "Number of Songs", accessor: "song" },
-];
+const parent = css`
+  background-color: rgb(240, 242, 255);
+  padding: 12px 20px;
+`;
 
-const parent   = css`
- background-color:rgb(240,242,255);
- padding: 12px 20px;
-`
-const cardContainer  = css`
-background-color: white;
-`
+const cardContainer = css`
+  background-color: white;
+`;
+
 const mainContainerStyles = css`
   display: flex;
   flex-direction: row;
@@ -35,96 +28,93 @@ const mainContainerStyles = css`
 `;
 
 const Statistics: React.FC = () => {
-  const songs = useSelector((state: RootState) => state.songs.songs);
+  const songs = useAppSelector((state) => state.songs.songs);
 
+  // Define the type for the aggregated data
+  interface ArtistData {
+    _id: string;
+    artist: string;
+    albumCount: number;
+    songCount: number;
+  }
 
-  const columns: MRT_ColumnDef<Song>[] = [
+  // Aggregate the data to calculate the number of albums and songs for each artist
+  const artistData: Record<string, { artist: string; albums: Set<string>; songCount: number }> = useMemo(() => {
+    const data: Record<string, { artist: string; albums: Set<string>; songCount: number }> = {};
+    songs.forEach((song) => {
+      if (!data[song.artist]) {
+        data[song.artist] = {
+          artist: song.artist,
+          albums: new Set(),
+          songCount: 0,
+        };
+      }
+      data[song.artist].albums.add(song.album);
+      data[song.artist].songCount += 1;
+    });
+    return data;
+  }, [songs]);
+
+  // Transform the aggregated data into the required format
+  const transformedData: ArtistData[] = useMemo(() => 
+    Object.values(artistData).map((data, index) => ({
+      _id: (index + 1).toString(),
+      artist: data.artist,
+      albumCount: data.albums.size,
+      songCount: data.songCount,
+    })), [artistData]
+  );
+
+  const columns: MRT_ColumnDef<ArtistData>[] = [
     {
-      accessorKey: "_id",
-      header: "No.",
+      accessorKey: '_id',
+      header: 'No.',
       size: 100,
     },
     {
-      accessorKey: "title",
-      header: "Title",
+      accessorKey: 'artist',
+      header: 'Artist',
       size: 150,
     },
     {
-      accessorKey: "artist",
-      header: "Artist",
+      accessorKey: 'albumCount',
+      header: 'No. of Albums',
       size: 250,
     },
     {
-      accessorKey: "album",
-      header: "Album",
-      size: 150,
-    },
-    {
-      accessorKey: "genre",
-      header: "Genre",
+      accessorKey: 'songCount',
+      header: 'No. of Songs',
       size: 150,
     },
   ];
 
-  
+  const table = useMaterialReactTable({
+    columns,
+    data: transformedData,
+  });
 
-
-
-
-
-
-
-  // Prepare data for StatisticsTable1
-  const preparedData = songs.reduce<{ [key: string]: { artist: string; album: number; song: number } }>((acc, song) => {
-    const { artist, album } = song;
-    if (!acc[artist]) {
-      acc[artist] = { artist, album: 0, song: 0 };
-    }
-    acc[artist].album++;
-    acc[artist].song++;
-    return acc;
-  }, {});
-
-  const preparedDataForTable2 = songs.reduce<{ [key: string]: { album: string; song: number } }>((acc, song) => {
-    const { album } = song;
-    if (!acc[album]) {
-      acc[album] = { album, song: 0 };
-    }
-    acc[album].song++;
-    return acc;
-  }, {});
-    
-  // const preparedDataForTable2Array = Object.values(preparedDataForTable2);
-
-  // Convert the object to an array of objects
-  const dataForTable = Object.values(preparedData);
-
-  // Calculate total albums
-  const totalAlbums = Object.values(preparedData).reduce((acc, artist) => acc + artist.album, 0);
-
-// const table = useMaterialReactTable({
-//     columns,
-//     dataForTable,
-    
-// });
-
-
+  // Calculate the total number of songs, artists, albums, and genres
+  const totalSongs = songs.length;
+  const totalArtists = Object.keys(artistData).length;
+  const totalAlbums = new Set(songs.map((song) => song.album)).size;
+  const totalGenres = new Set(songs.map((song) => song.genre)).size;
 
   return (
     <Container css={parent}>
       <Title>Statistics</Title>
       <CardContainer css={cardContainer}>
-        <Card title="Total Songs" value={songs.length.toString()} icon={<FaMusic />} />
-        <Card title="Total Artists" value={Object.keys(preparedData).length.toString()} icon={<FaUser />} />
-        <Card title="Total Albums" value={totalAlbums?.toString()} icon={<FaCompactDisc />} />
-        <Card title="Total Genres" value={new Set(songs.map(song => song.genre)).size.toString()} icon={<FaPalette />} />
+        <Card title="Total Songs" value={totalSongs} icon={<FaMusic />} />
+        <Card title="Total Artists" value={totalArtists} icon={<FaUser />} />
+        <Card title="Total Albums" value={totalAlbums} icon={<FaCompactDisc />} />
+        <Card title="Total Genres" value={totalGenres} icon={<FaPalette />} />
       </CardContainer>
       <div css={mainContainerStyles}>
-      <BarChart />
-      <SongsPerAlbum />
-    </div>
-        {/* <StatisticsTable1 data={dataForTable} columns={columns1} /> */}
-        {/* <MaterialReactTable table={table} /> */}
+        <BarChart />
+        <SongsPerAlbum />
+      </div>
+      <div css={TableContainer}>
+        <MaterialReactTable table={table} />
+      </div>
     </Container>
   );
 };
@@ -135,13 +125,15 @@ export default Statistics;
 const Container = styled.div`
   padding: 20px;
 `;
+const TableContainer = css`
+  padding-top: 20px;
+`;
 
 const Title = styled.h1`
   padding-left: 20px;
   padding-bottom: 20px;
   font-weight: 600; /* Medium font weight */
-  margin: 0
-
+  margin: 0;
 `;
 
 const CardContainer = styled.div`
@@ -149,8 +141,6 @@ const CardContainer = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
- 
-
 `;
 
 const FlexContainer = styled.div`
@@ -169,7 +159,6 @@ const ChartWrapper = styled.div`
   display: flex;
   align-items: stretch; /* Ensures the height matches the table */
   justify-content: center; /* Center the content inside the wrapper */
-
 `;
 
 const TableWrapper = styled.div`

@@ -2,11 +2,12 @@
 import { css } from "@emotion/react";
 import React, { useState } from "react";
 // import Table from "../component/Table/Table";
-import NewTable from "../component/Table/Table";
-import getSongs from "../../services/get-songs.service";
+import Table from "../component/Table/Table";
+// import getSongs from "../../services/get-songs.service";
 import { useEffect } from "react";
 import { Song } from "../../utils/Types";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { fetchSongsStart, deleteSongStart } from "../redux/slices/Slice";
 import { RootState } from "../redux/store/Store";
 import { MRT_ColumnDef } from "material-react-table";
@@ -85,7 +86,7 @@ const CloseButton = styled.button`
 `;
 
 const Home: React.FC = () => {
-  const dispatch = useDispatch(); // Get dispatch function from Redux
+  const dispatch = useAppDispatch(); // Get dispatch function from Redux
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
 
 
@@ -113,8 +114,13 @@ const Home: React.FC = () => {
   };
 
   const columns: MRT_ColumnDef<Song>[] = [
+    // {
+    //   accessorKey: "_id",
+    //   header: "No.",
+    //   size: 100,
+    // },
     {
-      accessorKey: "_id",
+      accessorKey: "index",
       header: "No.",
       size: 100,
     },
@@ -161,17 +167,23 @@ const Home: React.FC = () => {
     dispatch(fetchSongsStart());
   }, []); // Make sure to include dispatch in the dependency array to avoid unnecessary re-renders
 
-  const songs = useSelector((state: RootState) => state.songs.songs);
+  const songs = useAppSelector((state) => state.songs.songs);
   console.log("see the songs inside home page");
   console.log(songs);
-  const loading = useSelector((state: RootState) => state.songs.loading);
-  const error = useSelector((state: RootState) => state.songs.error);
+// Add index field
+const indexedSongs = songs.map((song, index) => ({
+  ...song,
+  index: index + 1,
+}));
+
+  const loading = useAppSelector((state) => state.songs.loading);
+  const error = useAppSelector((state) => state.songs.error);
   return (
     <div css={homePageStyles} >
       {loading && <p>Loading...</p>} {/* Display loading message */}
       {error && <p>Error: {error}</p>} {/* Display error message */}
       {/* {!loading && !error && <Table data={songs} columns={columns} />} */}
-      {!loading && !error && <NewTable data={songs} columns={columns}  />}
+      {!loading && !error && <Table data={indexedSongs} columns={columns}  />}
 
       {isEditPopupOpen && (
         <PopupBackground onClick={handlePopupBackgroundClick}>
