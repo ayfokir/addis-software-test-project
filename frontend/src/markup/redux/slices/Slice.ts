@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ApiResponse } from '../../../utils/Types';
+import { ApiResponse, DeleteResponse } from '../../../utils/Types';
 import { ErrorResponse } from '../../../utils/Types';
 // Define the Song interface
 export interface Song {
@@ -81,9 +81,9 @@ const songSlice = createSlice({
           state.loading = true;
           state.error = null;
         },
-        deleteSongSuccess(state, action: PayloadAction<ApiResponse>) {
+        deleteSongSuccess(state, action: PayloadAction<DeleteResponse>) {
             state.loading = false;
-            state.songs = state.songs.filter(song => song._id !== action.payload.songs[0]._id);
+            state.songs = state.songs.filter(song => song._id !== action.payload.song._id);
             state.message = action.payload.message
         },
         deleteSongFailure(state, action: PayloadAction<ErrorResponse>) {

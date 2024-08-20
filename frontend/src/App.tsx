@@ -9,10 +9,12 @@ import Home from './markup/pages/Home';
 import store from './markup/redux/store/Store';
 import Statistics from './markup/pages/Statistics';
 import { Provider } from 'react-redux';
+import { Notification } from './notification/Notification';
 function App() {
   return (
     <div className=''>
-      <Provider store={store}>    
+      <Provider store={store}>  
+        <Notification  />  
       <Router>
         <Header />
       <Routes>

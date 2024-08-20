@@ -16,11 +16,11 @@ async function EditSong(req, res, next) {
         } else { 
             res.status(200).json({
                 song: editedSong.song,
-                status: true
+                success: true,
+                message: "Song Updated Successfully"
             });
         }
     } catch (error) {
-        console.error('Error in EditSong controller:', error);
         res.status(500).json({error: process.env.NODE_ENV === 'development' ? error.message : "Unexpected error occurred", success: false });
     }
 }
