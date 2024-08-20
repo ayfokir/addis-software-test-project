@@ -11,12 +11,13 @@ async function Create(req, res, next) {
         if (result.success) {
             res.status(201).json({
                 song: result.song,
-                status: true
+                success: true,
+                message: "Song Add successfully"
             });
         } else {
             res.status(400).json({
             error: result.error,
-            status: false
+            success: false
             });
         }
     } catch (error) {

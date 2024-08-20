@@ -11,13 +11,13 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { fetchSongsStart, deleteSongStart } from "../redux/slices/Slice";
 import { RootState } from "../redux/store/Store";
 import { MRT_ColumnDef } from "material-react-table";
-import { setSelectedSong } from "../redux/slices/selectedSongSlice";
+import { setSelectedSong } from "../redux/slices/selectedSong";
 import styled from "@emotion/styled";
 import EditSong from "../component/Main/EditSong";
-const homePageStyles  =  css `
-    background-color:rgb(240,242,255);
-    padding: 12px 20px;
-`
+const homePageStyles = css`
+  background-color: rgb(240, 242, 255);
+  padding: 12px 20px;
+`;
 const Button = styled.button`
   padding: 10px 20px; /* Increased padding for larger buttons */
   font-size: 16px; /* Increased font size */
@@ -40,7 +40,6 @@ const EditButton = styled(Button)`
 `;
 
 const Styled = styled.td`
-
   padding: 8px;
   text-align: left;
 `;
@@ -49,8 +48,6 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-start;
 `;
-
-
 
 const PopupBackground = styled.div`
   position: fixed;
@@ -62,7 +59,7 @@ const PopupBackground = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-   z-index: 1000; // Add this line
+  z-index: 1000; // Add this line
 `;
 
 const PopupContent = styled.div`
@@ -70,7 +67,7 @@ const PopupContent = styled.div`
   padding: 20px;
   border-radius: 8px;
   position: relative;
-    z-index: 1001; // Add this line
+  z-index: 1001; // Add this line
 `;
 
 const CloseButton = styled.button`
@@ -88,7 +85,6 @@ const CloseButton = styled.button`
 const Home: React.FC = () => {
   const dispatch = useAppDispatch(); // Get dispatch function from Redux
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
-
 
   const handlePopupBackgroundClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -109,7 +105,7 @@ const Home: React.FC = () => {
   const handleEdit = (row: Song) => {
     console.log(`Editing song with id ${row._id}`);
     setIsEditPopupOpen(true);
-    console.log("see row:", row)
+    console.log("see row:", row);
     dispatch(setSelectedSong(row)); // Dispatch selectSong action with the selected song
   };
 
@@ -145,22 +141,23 @@ const Home: React.FC = () => {
       size: 150,
     },
     {
-    accessorKey: 'actions',
-    header: 'Action',
-    size: 100,
-    Cell: ({ row }) => (
-      <Styled>
-      <ButtonContainer>
-        <EditButton onClick={() => handleEdit(row.original)}>Edit</EditButton>
-        <DeleteButton onClick={() => handleDelete(row.original._id)}>
-          Delete
-        </DeleteButton>
-      </ButtonContainer>
-    </Styled>
-    ),
-  }
+      accessorKey: "actions",
+      header: "Action",
+      size: 100,
+      Cell: ({ row }) => (
+        <Styled>
+          <ButtonContainer>
+            <EditButton onClick={() => handleEdit(row.original)}>
+              Edit
+            </EditButton>
+            <DeleteButton onClick={() => handleDelete(row.original._id)}>
+              Delete
+            </DeleteButton>
+          </ButtonContainer>
+        </Styled>
+      ),
+    },
   ];
-  
 
   useEffect(() => {
     // Dispatch fetchSongsStart action when the component mounts
@@ -170,21 +167,26 @@ const Home: React.FC = () => {
   const songs = useAppSelector((state) => state.songs.songs);
   console.log("see the songs inside home page");
   console.log(songs);
-// Add index field
-const indexedSongs = songs.map((song, index) => ({
-  ...song,
-  index: index + 1,
-}));
+  // Add index field
+  const indexedSongs = songs.map((song, index) => ({
+    ...song,
+    index: index + 1,
+  }));
 
   const loading = useAppSelector((state) => state.songs.loading);
   const error = useAppSelector((state) => state.songs.error);
   return (
-    <div css={homePageStyles} >
+    <div css={homePageStyles}>
       {loading && <p>Loading...</p>} {/* Display loading message */}
+
+
+
+
+
+      
       {error && <p>Error: {error}</p>} {/* Display error message */}
       {/* {!loading && !error && <Table data={songs} columns={columns} />} */}
-      {!loading && !error && <Table data={indexedSongs} columns={columns}  />}
-
+      {!loading && !error && <Table data={indexedSongs} columns={columns} />}
       {isEditPopupOpen && (
         <PopupBackground onClick={handlePopupBackgroundClick}>
           <PopupContent>

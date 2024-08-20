@@ -4,13 +4,15 @@ import axios from 'axios';
 import { AxiosResponse } from 'axios'; // Import AxiosResponse type
 import { fetchSongsStart, fetchSongsSuccess, fetchSongsFailure, addSongStart, addSongSuccess, addSongFailure, updateSongStart, updateSongSuccess, updateSongFailure, deleteSongStart,deleteSongSuccess,deleteSongFailure,
 } from '../slices/Slice';
+import {FailureMessage, SuccessMessage} from '../slices/Notification'
+
 import { ApiResponse } from '../../../utils/Types';
 import { ErrorResponse } from '../../../utils/Types';
 
 
 // Fetch Songs
 // Define API endpoints
-const API_URL = process.env.REACT_APP_BASE_URL ;
+const API_URL = process.env.REACT_APP_BACKEND_URL ;
 console.log("see base url:", API_URL)
 function* fetchSongs(): Generator {
     try {
@@ -30,23 +32,26 @@ function* fetchSongs(): Generator {
         } else {
             // Handle unexpected response format
             yield put(fetchSongsFailure({ error: "Unexpected response format", success: false }));
+            // yield put(FailureMessage({error: "Unexpected error occurred", success: false} ));
+            
         }
     } catch (error: any) {
         yield put(fetchSongsFailure({ error: error.message || "Unexpected error occurred", success: false }));
+        // yield put(FailureMessage({error: error.message || "Unexpected error occurred", success: false} ));
     }
 }
 
 // Add Song
 function* addSong(action: PayloadAction<FormData>): Generator {
-    const API_URL: string = process.env.REACT_APP_API_URL || '';
+    // const API_URL = process.env.REACT_APP_API_URL;
     try {
         const response: any = yield call(axios.post, `${API_URL}/api/create`, action.payload);
-        const typedResponse = response as AxiosResponse<any, ApiResponse>; // Assert type to AxiosResponse<any, ApiResponse>
-        console.log("see inside add saga")
-        console.log(typedResponse)
-        yield put(addSongSuccess(typedResponse.data.song)); // Use typedResponse.data.songs[0]
+        yield put(addSongSuccess(response.data.song)); // Use typedResponse.data.songs[0]
+        yield put(SuccessMessage({message: response.data.message, success: response.data.success}))
     } catch (error: any) {
         yield put(addSongFailure(error.message));
+        yield put(FailureMessage({error: error.message || "Unexpected error occurred", success: false} ));
+
     }
 }
 
@@ -54,34 +59,34 @@ function* addSong(action: PayloadAction<FormData>): Generator {
 function* updateSong(action: PayloadAction<{ _id: string}>): Generator {
     try {
         const { _id} = action.payload;
-        console.log("inside Update saga");
         // Append _id to the URL as a query parameter
         const response: any = yield call(axios.patch, `${API_URL}/api/edit/${action.payload._id}`, action.payload);
-        const typedResponse = response as AxiosResponse<any, ApiResponse>;
-        yield put(updateSongSuccess(typedResponse.data.song));
+        yield put(updateSongSuccess(response.data.song));
+        yield put(SuccessMessage({message: response.data.message, success: response.data.success}))
+
     } catch (error: any) {
         yield put(updateSongFailure(error.message));
+        yield put(FailureMessage({error: error.message || "Unexpected error occurred", success: false} ));
+
     }
 }
 // Delete Song
 function* deleteSong(action: PayloadAction<string>): Generator {
-    console.log("see action ")
-    console.log(action)
     try {
      const response : any =    yield call(axios.delete, `${API_URL}/api/delete/${action.payload}`);
-     console.log("see delete response:", response.data)
      if (response.data.success) {
          yield put(deleteSongSuccess(response.data));
+         yield put(SuccessMessage({message: response.data.message, success: response.data.success}))
      }
      else if (!response.data.success) {
-        yield put(deleteSongFailure(response.data));
+        yield put(FailureMessage({message: response.data.message, success: response.data.success}));
      }
      else {
         // Handle unexpected response format
-        yield put(deleteSongFailure({ error: "Unexpected response format", success: false }));
+        yield put(FailureMessage({ error: "Unexpected response format", success: false }));
     }
     } catch (error: any) {
-        yield put(deleteSongFailure({error: error.message || "Unexpected error occurred", success: false} ));
+        yield put(FailureMessage({error: error.message || "Unexpected error occurred", success: false} ));
     }
 }
 

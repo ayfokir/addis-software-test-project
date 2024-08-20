@@ -10,8 +10,17 @@ export interface ApiResponse {
         success: boolean;
         songs: Song[];
         message: string
+        
     
 }
+export interface DeleteResponse {
+        success: boolean;
+        song: Song;
+        message: string
+        
+    
+}
+
 export interface ErrorResponse {
         error: string;
         success: boolean
