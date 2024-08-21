@@ -33,7 +33,6 @@ function* fetchSongs(): Generator {
             // Handle unexpected response format
             yield put(fetchSongsFailure({ error: "Unexpected response format", success: false }));
             // yield put(FailureMessage({error: "Unexpected error occurred", success: false} ));
-            
         }
     } catch (error: any) {
         yield put(fetchSongsFailure({ error: error.message || "Unexpected error occurred", success: false }));
@@ -46,8 +45,16 @@ function* addSong(action: PayloadAction<FormData>): Generator {
     // const API_URL = process.env.REACT_APP_API_URL;
     try {
         const response: any = yield call(axios.post, `${API_URL}/api/create`, action.payload);
-        yield put(addSongSuccess(response.data.song)); // Use typedResponse.data.songs[0]
-        yield put(SuccessMessage({message: response.data.message, success: response.data.success}))
+        if(response.data.success){
+            yield put(addSongSuccess(response.data.song)); // Use typedResponse.data.songs[0]
+            yield put(SuccessMessage({message: response.data.message, success: response.data.success}))
+        }
+        else if(!response.data.success) {
+            yield put(FailureMessage({error: response.data.error || "Unexpected error occurred", success: false} ));
+        }
+        else{
+            yield put(FailureMessage({error:"Unexpected error occurred", success: false} ));
+        }
     } catch (error: any) {
         yield put(addSongFailure(error.message));
         yield put(FailureMessage({error: error.message || "Unexpected error occurred", success: false} ));
@@ -61,9 +68,16 @@ function* updateSong(action: PayloadAction<{ _id: string}>): Generator {
         const { _id} = action.payload;
         // Append _id to the URL as a query parameter
         const response: any = yield call(axios.patch, `${API_URL}/api/edit/${action.payload._id}`, action.payload);
-        yield put(updateSongSuccess(response.data.song));
-        yield put(SuccessMessage({message: response.data.message, success: response.data.success}))
-
+        if(response.data.success){
+            yield put(updateSongSuccess(response.data.song));
+            yield put(SuccessMessage({message: response.data.message, success: response.data.success}))
+        }
+        else if(!response.data.success) {
+            yield put(FailureMessage({error: response.data.error || "Unexpected error occurred", success: response.data.success}))
+        }
+        else{
+            yield put(FailureMessage({error:"Unexpected error occurred", success: false} ));
+        }
     } catch (error: any) {
         yield put(updateSongFailure(error.message));
         yield put(FailureMessage({error: error.message || "Unexpected error occurred", success: false} ));

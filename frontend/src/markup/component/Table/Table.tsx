@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useMemo, useRef, UIEvent, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Song } from '../../../utils/Types';
 import {
   MaterialReactTable,
@@ -9,10 +9,17 @@ import {
 import styled from "@emotion/styled";
 import AddSongForm from '../Main/AddSong';
 
+
+
+const tableWrrapper = styled.div`
+padding-bottom: 10px;
+`
+
+
 const StyledHeadingContainer = styled.div`
   display: flex;
   margin-bottom: 15px;
-  padding: 15px;
+  padding:  0 15px;
   justify-content: space-between;
   align-items: center;
   background-color: white;
@@ -23,6 +30,7 @@ const StyledHeading = styled.h3`
   font-size: 24px;
   font-weight: 500;
   color: #333;
+  margin: 16px 0
 `;
 
 const StyledButton = styled.button`
@@ -97,16 +105,14 @@ const NewTable: React.FC<BookTableProps> = ({ data, columns }) => {
 
   return (
     <div >
-         <StyledHeadingContainer>
+        <StyledHeadingContainer>
         <StyledHeading>Songs Table</StyledHeading>
         <StyledButton onClick={handleCreateSongsClick}>
-          Create Songs
+          Create Song
         </StyledButton>
       </StyledHeadingContainer>
       {/* <h3 css={h1Styles}>Songs Table</h3> */}
       <MaterialReactTable table={table} />
-
-
 
       {isPopupOpen && (
         <PopupBackground onClick={handlePopupBackgroundClick}>

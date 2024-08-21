@@ -5,6 +5,7 @@ import React from 'react';
 interface CardProps {
   title: string;
   value: number;
+  color : string
   icon: React.ReactNode; // Use React.ReactNode for any type of icon component
 }
 
@@ -42,10 +43,7 @@ const cardStyles = (color: string) => css`
 `;
 
 
-const Card: React.FC<CardProps> = ({ title, value, icon }) => {
-  const index = Math.floor(Math.random() * colors.length); // Get a random index for the color
-  const color = colors[index]; // Get the color based on the random index
-
+const Card: React.FC<CardProps> = ({ title, value, icon, color }) => {
   return (
     <div css={cardStyles(color)}>
       {icon} {/* Render the icon component */}

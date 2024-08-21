@@ -9,6 +9,8 @@ const footerStyles = css`
   text-align: center;
   bottom: 0;
   width: 100%;
+  position: fixed;
+   z-index: 100; // Add this line
   margin-top: auto; /* Pushes footer to the bottom of the flex container */
 `;
 

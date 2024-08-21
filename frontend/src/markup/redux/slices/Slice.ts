@@ -59,7 +59,6 @@ const songSlice = createSlice({
             state.error = action.payload;
         },
 
-
         updateSongStart(state, action: PayloadAction<{ title: string | undefined; album: string | undefined; genre: string | undefined; artist: string | undefined, _id: string | undefined }>) {
             state.loading = true;
             state.error = null;

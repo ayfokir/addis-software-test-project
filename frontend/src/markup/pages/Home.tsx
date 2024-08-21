@@ -6,6 +6,7 @@ import Table from "../component/Table/Table";
 // import getSongs from "../../services/get-songs.service";
 import { useEffect } from "react";
 import { Song } from "../../utils/Types";
+import CircularProgress from '@mui/material/CircularProgress';
 // import { useDispatch, useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { fetchSongsStart, deleteSongStart } from "../redux/slices/Slice";
@@ -86,9 +87,7 @@ const Home: React.FC = () => {
   const dispatch = useAppDispatch(); // Get dispatch function from Redux
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
 
-  const handlePopupBackgroundClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const handlePopupBackgroundClick = ( e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.target === e.currentTarget) {
       setIsEditPopupOpen(false);
     }
@@ -177,12 +176,12 @@ const Home: React.FC = () => {
   const error = useAppSelector((state) => state.songs.error);
   return (
     <div css={homePageStyles}>
-      {loading && <p>Loading...</p>} {/* Display loading message */}
-
-
-
-
-
+      {/* {loading && <p>Loading...</p>}  */}
+      {loading && (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <CircularProgress  size={80}/>
+    </div>
+  )}
       
       {error && <p>Error: {error}</p>} {/* Display error message */}
       {/* {!loading && !error && <Table data={songs} columns={columns} />} */}

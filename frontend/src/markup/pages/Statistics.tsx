@@ -37,7 +37,7 @@ const Statistics: React.FC = () => {
     albumCount: number;
     songCount: number;
   }
-
+ console.log("see the songs inside the  statics page :", songs)
   // Aggregate the data to calculate the number of albums and songs for each artist
   const artistData: Record<string, { artist: string; albums: Set<string>; songCount: number }> = useMemo(() => {
     const data: Record<string, { artist: string; albums: Set<string>; songCount: number }> = {};
@@ -54,7 +54,7 @@ const Statistics: React.FC = () => {
     });
     return data;
   }, [songs]);
-
+  
   // Transform the aggregated data into the required format
   const transformedData: ArtistData[] = useMemo(() => 
     Object.values(artistData).map((data, index) => ({
@@ -103,10 +103,10 @@ const Statistics: React.FC = () => {
     <Container css={parent}>
       <Title>Statistics</Title>
       <CardContainer css={cardContainer}>
-        <Card title="Total Songs" value={totalSongs} icon={<FaMusic />} />
-        <Card title="Total Artists" value={totalArtists} icon={<FaUser />} />
-        <Card title="Total Albums" value={totalAlbums} icon={<FaCompactDisc />} />
-        <Card title="Total Genres" value={totalGenres} icon={<FaPalette />} />
+        <Card title="Total Songs" value={totalSongs}    color ={"rgb(152, 251, 152)"} icon={<FaMusic />} />
+        <Card title="Total Artists" value={totalArtists}   color ={"rgb(135, 206, 235)"}  icon={<FaUser />} />
+        <Card title="Total Albums" value={totalAlbums}    color ={"rgb(255, 215, 0)"} icon={<FaCompactDisc />} />
+        <Card title="Total Genres" value={totalGenres}   color ={"rgb(255, 99, 71)"}  icon={<FaPalette />} />
       </CardContainer>
       <div css={mainContainerStyles}>
         <BarChart />
@@ -127,6 +127,7 @@ const Container = styled.div`
 `;
 const TableContainer = css`
   padding-top: 20px;
+  margin-bottom: 90px
 `;
 
 const Title = styled.h1`
