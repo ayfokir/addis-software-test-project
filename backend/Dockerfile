@@ -37,5 +37,5 @@ HEALTHCHECK CMD curl --fail http://localhost:3000/ || exit 1
 # Optional: Non-root user
 #it’s highly recommended for production environments,
 # especially if your application is exposed to the internet or interacts with external systems.
-# RUN useradd -m myuser
-# USER myuser
+ RUN useradd -m newUser
+ USER newUser
