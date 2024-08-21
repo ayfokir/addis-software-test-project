@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { updateSongStart } from "../../redux/slices/Slice";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store/Store";
+// import { useDispatch } from "react-redux";
+// import { useSelector } from "react-redux";
+// import { RootState } from "../../redux/store/Store";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 const FormContainer = styled.div`
   background-color: #fff;
   padding: 20px;
@@ -37,12 +38,12 @@ const Button = styled.button`
   cursor: pointer;
 `;
 const EditSong: React.FC<{onAddSong: () => void;}> = ({ onAddSong }) => {
-  const dispatch = useDispatch();
-  const selectedSong = useSelector((state: RootState) => state.selectedSong.selectedSong);
+  const dispatch = useAppDispatch();
+  const selectedSong = useAppSelector((state) => state.selectedSong.selectedSong);
   console.log("see the selected song inside Edit component")
   console.log(selectedSong)
   // Get formError state from Redux store
-  const { loading, error } = useSelector((state: RootState) => state.songs);
+  const { loading, error } = useAppSelector((state) => state.songs);
   console.log(loading)
   console.log(error)
   const [title, setTitle] = useState("");

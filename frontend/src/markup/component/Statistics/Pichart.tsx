@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store/Store';
 import { css } from '@emotion/react';
 
-// Register necessary components from Chart.js
 ChartJS.register(ArcElement, Tooltip);
 
 const containerStyles = css`
@@ -30,13 +29,12 @@ const headerStyles = css`
 
 const chartContainerStyles = css`
   display: flex;
-  flex-direction: row; /* Change to row direction */
-  align-items: center; /* Align items to the start */
-  justify-content: space-between; /* Space items out evenly */
+  flex-direction: row; 
+  align-items: center; 
+  justify-content: space-between;
 `;
 
 const chartWrapperStyles = css`
-//   flex: 0.6; /* Allow the chart to take up available space */
   display: flex;
   justify-content: center;
   width: 250px;
@@ -46,9 +44,18 @@ const chartWrapperStyles = css`
 const listContainerStyles = css`
   display: flex;
   flex-direction: column;
-  width: 250px; /* Adjust width as needed */
-  margin-left: 20px; /* Space between chart and list */
+  width: 250px;
+  margin-left: 20px;
 `;
+
+const generateColors = (num: number) => {
+  const colors = [];
+  for (let i = 0; i < num; i++) {
+    const color = `hsl(${Math.floor(Math.random() * 360)}, 100%, 50%)`;
+    colors.push(color);
+  }
+  return colors;
+};
 
 const SongsPerAlbum: React.FC = () => {
   const [labels, setLabels] = useState<string[]>([]);
@@ -56,7 +63,7 @@ const SongsPerAlbum: React.FC = () => {
     labels: [] as string[],
     datasets: [
       {
-        data: [0, 0, 0], // Initial data
+        data: [0, 0, 0],
         backgroundColor: ['#007bff', '#28a745', '#dc3545'],
         hoverBackgroundColor: ['#007bff', '#28a745', '#dc3545'],
         borderWidth: 0,
@@ -79,6 +86,7 @@ const SongsPerAlbum: React.FC = () => {
 
     const albums = Object.keys(albumCounts);
     const counts = Object.values(albumCounts);
+    const colors = generateColors(albums.length); // Generate colors dynamically
 
     setLabels(albums);
     setData({
@@ -86,8 +94,8 @@ const SongsPerAlbum: React.FC = () => {
       datasets: [
         {
           data: counts,
-          backgroundColor: ['#007bff', '#28a745', '#dc3545'],
-          hoverBackgroundColor: ['#007bff', '#28a745', '#dc3545'],
+          backgroundColor: colors,
+          hoverBackgroundColor: colors,
           borderWidth: 0,
         },
       ],
@@ -99,7 +107,7 @@ const SongsPerAlbum: React.FC = () => {
     cutout: '70%',
     plugins: {
       legend: {
-        display: false, // Disable the legend
+        display: false,
       },
     },
   };

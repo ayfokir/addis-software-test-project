@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { addSongStart } from "../../redux/slices/Slice";
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store/Store';
+// import { useSelector } from 'react-redux';
+// import { RootState } from '../../redux/store/Store';
 
 const FormContainer = styled.div`
   background-color: #fff;
@@ -40,9 +41,9 @@ const Button = styled.button`
   cursor: pointer;
 `;
 const AddSongForm: React.FC<{  onAddSong: () => void }> = ({ onAddSong }) => {
-  const dispatch = useDispatch(); // Get dispatch function from Redux
+  const dispatch = useAppDispatch(); // Get dispatch function from Redux
   // Get error state from Redux store
-  const addSongFailurError = useSelector((state: RootState) => state.songs.error);
+  const addSongFailurError = useAppSelector((state) => state.songs.error);
 
   const [title, setTitle] = useState('');
   const [album, setAlbum] = useState('');
@@ -72,7 +73,6 @@ const AddSongForm: React.FC<{  onAddSong: () => void }> = ({ onAddSong }) => {
     setError(''); 
     // Dispatch the addSongStart action with the form data
   let response  =   dispatch(addSongStart({ title, album, genre, artist }));
-  console.log("see response inside AddSong Component")
   console.log(response)
     // Clear the form fields
   };
