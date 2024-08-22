@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import React, { useState } from 'react';
 import { Song } from '../../../utils/Types';
 import {
@@ -11,8 +12,8 @@ import AddSongForm from '../Main/AddSong';
 
 
 
-const tableWrrapper = styled.div`
-padding-bottom: 10px;
+const tableWrrapper = css`
+margin-bottom: 90px;
 `
 
 
@@ -112,7 +113,9 @@ const NewTable: React.FC<BookTableProps> = ({ data, columns }) => {
         </StyledButton>
       </StyledHeadingContainer>
       {/* <h3 css={h1Styles}>Songs Table</h3> */}
+      <div css={tableWrrapper}>
       <MaterialReactTable table={table} />
+      </div>
 
       {isPopupOpen && (
         <PopupBackground onClick={handlePopupBackgroundClick}>
