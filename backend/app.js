@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(sanitize.middleware);
 // console.log("mongoDB URL:", process.env.MONGODB_URI)
 app.use(routes); // Use the routes
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 app.listen(port, (err) => {
     if (err) throw err;
     console.log(`Server Running at http://localhost:${port}`);
