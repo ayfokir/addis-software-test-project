@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  backend:
+    build: # is build property of backend service  of compose file 
+      context: ./backend  # Path to the backend directory
+      dockerfile: Dockerfile  # Dockerfile inside the backend directory
+    ports:
+      - "8000:8000"  # Maps the backend container's port 8000 to your host's port 8000
+    environment:
+      PORT: 8000
+      MONGODB_URI: mongodb+srv://Ayfo:test@cluster0.e8c2i9j.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+    volumes:
+      - ./backend:/app  # Map local backend directory to /app in the container
+      # MONGODB_URI: mongodb://db:27017/mydatabase  # Connect to the local MongoDB service
+    depends_on:
+      - frontend  # Ensure backend starts after frontend is built
+      # - db  # Ensure backend starts after MongoDB
+
+  frontend:
+    build:
+      context: ./frontend  # Path to the frontend directory
+      dockerfile: Dockerfile  # Dockerfile inside the frontend directory
+    ports:
+      - "3000:3000"  # Maps the frontend container's port 3000 to your host's port 3000. - is array or less syntax
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost:8000  # Frontend environment variable to reach the backend
+    volumes:
+      - ./frontend:/app  # Map local frontend directory to /app in the container
+#   db:
+#     image: mongo  # Use the official MongoDB image
+#     ports:
+#       - "27017:27017"  # Map MongoDB's default port
+#     volumes:
+#       - mongo_data:/data/db  # Persist MongoDB data, path inside the container, db container
+# the actual data is stored  in the host machine in the path:"Mountpoint": "/var/lib/docker/volumes/mongo_data/_data"
+# volumes:
+#   mongo_data:
+
+networks:
+  default:
+    driver: bridge

@@ -1,16 +1,12 @@
-const { editSong } = require('../services/edit-song.service');
+const  editSong  = require('../services/edit-song.service');
 
-async function EditSong(req, res, next) {
-    try {
+// async function EditSong(req, res) {
+module.exports =  async(req, res)  => {
+    // try {
         let song = req.body;
         let  songId = req.params.id
-        console.log("See the song before edit:");
-        console.log(song);
         
-        const editedSong = await editSong(song, songId);
-        console.log("See song after edit:");
-        console.log(editedSong);
-        
+        const editedSong = await editSong(song, songId);   
         if (!editedSong.success) {
             res.status(404).json({ error: editedSong.error });
         } else { 
@@ -20,11 +16,11 @@ async function EditSong(req, res, next) {
                 message: "Song Updated Successfully"
             });
         }
-    } catch (error) {
-        res.status(500).json({error: process.env.NODE_ENV === 'development' ? error.message : "Unexpected error occurred", success: false });
-    }
+    // } catch (error) {
+    //     res.status(500).json({error: process.env.NODE_ENV === 'development' ? error.message : "Unexpected error occurred", success: false });
+    // }
 }
 
-module.exports = {
-    EditSong
-};
+// module.exports = {
+//     EditSong
+// };

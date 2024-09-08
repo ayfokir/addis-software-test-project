@@ -1,7 +1,7 @@
-const { deleteSong } = require('../services/delete.song.service');
+const  deleteSong  = require('../services/delete.song.service');
 
-async function Delete(req, res, next) {
-    try {
+ module.exports =  async (req, res) => {
+    // try {
         const songId = req.params.id; // Assuming the song ID is passed as a URL parameter
         const result = await deleteSong(songId);
 
@@ -17,11 +17,11 @@ async function Delete(req, res, next) {
                 success: false
             });
         }
-    } catch (error) {
-        res.status(500).json({error: process.env.NODE_ENV === 'development' ? error.message : "Unexpected error occurred", success: false });
-    }
+    // } catch (error) {
+    //     res.status(500).json({error: process.env.NODE_ENV === 'development' ? error.message : "Unexpected error occurred", success: false });
+    // }
 }
 
-module.exports = {
-    Delete
-};
+// module.exports = {
+//     Delete
+// };

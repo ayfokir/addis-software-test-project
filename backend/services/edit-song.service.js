@@ -2,8 +2,9 @@ const mongoose = require('../config/db.config'); // Importing mongoose config en
 const Song = require('./model/Song'); // Import the Song model
 
 
-async function editSong(songData, songId) {
-    try {
+ module.exports =  async(songData, songId) =>  {
+    //    throw new Error("Error occure inside edit rout miserably")
+    // try {
         const song = await Song.findById(songId);
         if (!song) {
             throw new Error('Song not found');
@@ -16,12 +17,12 @@ async function editSong(songData, songId) {
         const updatedSong = await song.save();
         console.log('Song updated:', updatedSong);
         return { success: true, song: updatedSong };
-    } catch (error) {
-        console.error('Error editing song:', error.message);
-        return { success: false, error: error.message };
-    }
+    // } catch (error) {
+    //     console.error('Error editing song:', error.message);
+    //     return { success: false, error: error.message };
+    // }
 }
 
-module.exports = {
-    editSong
-};
+// module.exports = {
+//     editSong
+// };

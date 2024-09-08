@@ -1,12 +1,9 @@
 const { getSongs } = require('../services/get-songs-service');
 
-async function getSong(req, res, next) {
-    try {
+module.exports  =   async (req, res) => {
+    // try {
         // Get Songs
-        const result = await getSongs();
-        console.log("See songs:");
-        console.log(result);
-                
+        const result = await getSongs();            
         if (result.success) {
             if (!result.songs.length) {
                 res.status(404).json({ error: "No songs found!" });
@@ -23,11 +20,11 @@ async function getSong(req, res, next) {
                 success: false
             });
         }
-    } catch (error) {
-        res.status(500).json({error: process.env.NODE_ENV === 'development' ? error.message : "Unexpected error occurred", success: false });
-    }
+    // } catch (error) {
+    //     res.status(500).json({error: process.env.NODE_ENV === 'development' ? error.message : "Unexpected error occurred", success: false });
+    // }
 }
 
-module.exports = {
-    getSong
-};
+// module.exports = {
+//     getSong
+// };
