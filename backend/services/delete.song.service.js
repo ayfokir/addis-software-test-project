@@ -2,8 +2,9 @@
 const mongoose = require('../config/db.config'); // Importing mongoose config ensures the connection is established
 const Song = require('./model/Song'); // Import the Song model
 
-async function deleteSong(songId) {
-    try {
+  module.exports =   async(songId) =>  {
+    // throw new Error("Error occure inside edit service miserably")
+    // try {
         const result = await Song.findByIdAndDelete(songId);
         if (result) {
             // Song found and deleted
@@ -14,13 +15,13 @@ async function deleteSong(songId) {
             console.log('Song not found with ID:', songId);
             return { success: false, error: 'Song not found' }; // Return an error message if no song was found
         }
-    } catch (error) {
-        // An error occurred
-        console.error('Error deleting song:', error);
-        return { success: false, error: error.message }; // Return the error message
-    }
+    // } catch (error) {
+    //     // An error occurred
+    //     console.error('Error deleting song:', error);
+    //     return { success: false, error: error.message }; // Return the error message
+    // }
 }
 
-module.exports = {
-    deleteSong
-};
+// module.exports = {
+//     deleteSong
+// };

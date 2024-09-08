@@ -63,18 +63,37 @@ const AddSongForm: React.FC<{  onAddSong: () => void }> = ({ onAddSong }) => {
   //   }
   // }, [loading, error, onAddSong]);
   
+  console.log("see title:", title)
+
   const handleSubmit =  (e: React.FormEvent) => {
     // dispatch(fetchSongsStart());
     e.preventDefault();
-    if (!title || !album || !genre || !artist) {
-      setError('All fields are required');
-      return;
-    }
+     // Trim the values to remove leading and trailing spaces
+  const trimmedTitle = title.trim();
+  const trimmedAlbum = album.trim();
+  const trimmedGenre = genre.trim();
+  const trimmedArtist = artist.trim();
+  
+  // Check if any field is empty after trimming
+  if (!trimmedTitle || !trimmedAlbum || !trimmedGenre || !trimmedArtist) {
+    setError('All fields are required');
+    return;
+  }
     setError(''); 
     // Dispatch the addSongStart action with the form data
-  let response  =   dispatch(addSongStart({ title, album, genre, artist }));
-  console.log(response)
+// Dispatch the action with trimmed values
+dispatch(addSongStart({
+  title: trimmedTitle,
+  album: trimmedAlbum,
+  genre: trimmedGenre,
+  artist: trimmedArtist
+}));  
     // Clear the form fields
+      // Optionally, you can clear the form fields after submission
+  setTitle('');
+  setAlbum('');
+  setGenre('');
+  setArtist('');
   };
 
   return (
@@ -85,19 +104,19 @@ const AddSongForm: React.FC<{  onAddSong: () => void }> = ({ onAddSong }) => {
       <form onSubmit={handleSubmit}>
         <FormGroup>
           <Label>Title:</Label>
-          <Input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <Input type="text" value={title} onChange={(e) => setTitle((e.target.value))} />
         </FormGroup>
         <FormGroup>
           <Label>Album:</Label>
-          <Input type="text" value={album} onChange={(e) => setAlbum(e.target.value)} />
+          <Input type="text" value={album} onChange={(e) => setAlbum((e.target.value))} />
         </FormGroup>
         <FormGroup>
           <Label>Genre:</Label>
-          <Input type="text" value={genre} onChange={(e) => setGenre(e.target.value)} />
+          <Input type="text" value={genre} onChange={(e) => setGenre((e.target.value))} />
         </FormGroup>
         <FormGroup>
           <Label>Artist:</Label>
-          <Input type="text" value={artist} onChange={(e) => setArtist(e.target.value)} />
+          <Input type="text" value={artist} onChange={(e) => setArtist((e.target.value))} />
         </FormGroup>
         <Button type="submit">Add Song</Button>
       </form>

@@ -77,12 +77,21 @@ const EditSong: React.FC<{onAddSong: () => void;}> = ({ onAddSong }) => {
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !album || !genre || !artist) {
-      setFormError('All fields are required');
-      return;
-    }
-    dispatch(updateSongStart({ title, album, genre, artist, _id }));
-    onAddSong()
+     // Trim the values to remove leading and trailing spaces
+     const trimmedTitle = title.trim();
+     const trimmedAlbum = album.trim();
+     const trimmedGenre = genre.trim();
+     const trimmedArtist = artist.trim();
+
+  // Check if any field is empty after trimming
+  if (!trimmedTitle || !trimmedAlbum || !trimmedGenre || !trimmedArtist) {
+    setFormError('All fields are required');
+    return;
+  }
+  setFormError(''); 
+
+    dispatch(updateSongStart({ title: trimmedTitle, album: trimmedAlbum, genre: trimmedGenre, artist: trimmedArtist, _id }));
+    onAddSong() 
   };
   if (!selectedSong) {
     return <div>No song selected</div>;

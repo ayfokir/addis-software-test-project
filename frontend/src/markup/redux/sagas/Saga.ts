@@ -50,12 +50,16 @@ function* addSong(action: PayloadAction<FormData>): Generator {
             yield put(SuccessMessage({message: response.data.message, success: response.data.success}))
         }
         else if(!response.data.success) {
+            console.log("see error message:", response.data)
             yield put(FailureMessage({error: response.data.error || "Unexpected error occurred", success: false} ));
+            console.log("see error message:", response.data)
         }
         else{
             yield put(FailureMessage({error:"Unexpected error occurred", success: false} ));
+            console.log("see error message:", response.data)
         }
     } catch (error: any) {
+        console.log("see error message:", error)
         yield put(addSongFailure(error.message));
         yield put(FailureMessage({error: error.message || "Unexpected error occurred", success: false} ));
 
