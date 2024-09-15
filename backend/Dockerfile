@@ -21,11 +21,11 @@ COPY . .
 
 # Expose the port the app runs on
 #  when we run this application inside a docker container , we should map a port on the host machine to  port 3000 on inside the container. This is done with the EX
-EXPOSE 3000 
+EXPOSE 8000 
 
 # set environment variable
-ENV PORT=8000
-ENV MONGODB_URI=mongodb+srv://Ayfo:test@cluster0.e8c2i9j.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+# ENV PORT=8000
+# ENV MONGODB_URI=mongodb+srv://Ayfo:test@cluster0.e8c2i9j.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
 # Command to run the application, belowe command is run in Exec form not Shell form
 CMD [ "node", "app.js" ]

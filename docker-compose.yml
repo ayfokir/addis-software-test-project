@@ -5,6 +5,8 @@ services:
     build: # is build property of backend service  of compose file 
       context: ./backend  # Path to the backend directory
       dockerfile: Dockerfile  # Dockerfile inside the backend directory
+  # image(backend image name with version) # add the name and version of the image here but using CL CD we can set automatically the version of the image 
+
     ports:
       - "8000:8000"  # Maps the backend container's port 8000 to your host's port 8000
     environment:
@@ -21,6 +23,7 @@ services:
     build:
       context: ./frontend  # Path to the frontend directory
       dockerfile: Dockerfile  # Dockerfile inside the frontend directory
+  # image(frontend image name with version) # add the name and version of the image here but using CL CD we can set automatically the version of the image 
     ports:
       - "3000:3000"  # Maps the frontend container's port 3000 to your host's port 3000. - is array or less syntax
     environment:
@@ -33,7 +36,8 @@ services:
 #       - "27017:27017"  # Map MongoDB's default port
 #     volumes:
 #       - mongo_data:/data/db  # Persist MongoDB data, path inside the container, db container
-# the actual data is stored  in the host machine in the path:"Mountpoint": "/var/lib/docker/volumes/mongo_data/_data"
+# #the actual data is stored  in the host machine in the path:"Mountpoint": "/var/lib/docker/volumes/mongo_data/_data"
+# #  /data/db, This directory is where MongoDB stores its data files.
 # volumes:
 #   mongo_data:
 
