@@ -8,6 +8,7 @@ const store = configureStore({
     reducer: rootReducer, // Pass the combined rootReducer directly
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),//connects the Saga middleware to Redux.
 });
+console.log("see store here:", store)
 
 sagaMiddleware.run(rootSaga); //starts the rootSaga.
 

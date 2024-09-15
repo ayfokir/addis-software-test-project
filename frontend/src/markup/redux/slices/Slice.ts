@@ -29,7 +29,7 @@ const songSlice = createSlice({
     name: 'songs',
     initialState,
     reducers: {
-        fetchSongsStart(state) {
+        fetchSongsStart(state) { // automatically create action type and action creator 
             state.loading = true;
             state.error = null;
             state.message = ""
@@ -47,9 +47,9 @@ const songSlice = createSlice({
 
 
         addSongStart(state, action: PayloadAction<{ title: string; album: string; genre: string; artist: string }>) {
-          state.loading = true;
-          state.error = null;
-         },
+        state.loading = true;
+        state.error = null;
+        },
         addSongSuccess(state, action: PayloadAction<Song>) {
             state.loading = false;
             state.songs.push(action.payload);
